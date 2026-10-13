@@ -176,7 +176,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
             : $"You clocked in at {clockIn:HH:mm}.\nWhat time are you clocking out?";
 
         _dialogOpen = true;
-        using var dialog = new TimeDialog("Time to clock out", message, defaultTime, clockIn, "Clock out", "Later");
+        using var dialog = new TimeDialog("Time to clock out", message, defaultTime, clockIn, "Clock out");
         _clockOutDialog = dialog;
         dialog.EnableLive(clockIn, WorkDay, message);
         var result = dialog.ShowDialog();

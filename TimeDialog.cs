@@ -8,7 +8,7 @@ internal sealed class TimeDialog : Form
         CustomFormat = "HH:mm",
         ShowUpDown = true,
         Width = 90,
-        Location = new Point(20, 70),
+        Location = new Point(20, 85),
     };
 
     private readonly DateTime _earliest;
@@ -16,7 +16,7 @@ internal sealed class TimeDialog : Form
 
     public DateTime Time { get; private set; }
 
-    public TimeDialog(string title, string message, DateTime defaultTime, DateTime earliest, string okText, string cancelText)
+    public TimeDialog(string title, string message, DateTime defaultTime, DateTime earliest, string okText, string? cancelText = null)
     {
         _title = title;
         _earliest = earliest;
@@ -28,19 +28,23 @@ internal sealed class TimeDialog : Form
         MinimizeBox = false;
         TopMost = true;
         ShowInTaskbar = true;
-        ClientSize = new Size(340, 160);
+        ClientSize = new Size(340, 180);
 
-        var label = new Label { Text = message, AutoSize = false, Location = new Point(20, 15), Size = new Size(300, 50) };
+        var label = new Label { Text = message, AutoSize = false, Location = new Point(20, 15), Size = new Size(300, 65) };
 
         _picker.Value = defaultTime;
 
-        var ok = new Button { Text = okText, DialogResult = DialogResult.OK, Location = new Point(110, 115), Size = new Size(110, 32) };
-        var cancel = new Button { Text = cancelText, DialogResult = DialogResult.Cancel, Location = new Point(230, 115), Size = new Size(90, 32) };
+        var ok = new Button { Text = okText, DialogResult = DialogResult.OK, Location = new Point(cancelText is null ? 215 : 110, 130), Size = new Size(110, 32) };
         ok.Click += OnOk;
 
-        Controls.AddRange([label, _picker, ok, cancel]);
+        Controls.AddRange([label, _picker, ok]);
         AcceptButton = ok;
-        CancelButton = cancel;
+        if (cancelText is not null)
+        {
+            var cancel = new Button { Text = cancelText, DialogResult = DialogResult.Cancel, Location = new Point(230, 130), Size = new Size(90, 32) };
+            Controls.Add(cancel);
+            CancelButton = cancel;
+        }
     }
 
     // Keeps the picker on the current time (until the user edits it) and shows the time worked past the work day.
