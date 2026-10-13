@@ -14,6 +14,9 @@ internal static class Program
             }
 
             ApplicationConfiguration.Initialize();
+#pragma warning disable WFO5001 // dark mode is experimental in .NET 10
+            Application.SetColorMode(SystemColorMode.System);
+#pragma warning restore WFO5001
             var context = new TrayApplicationContext();
             Application.Run(context);
             restart = context.RestartRequested;

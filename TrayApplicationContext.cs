@@ -375,6 +375,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
         var remaining = WorkDay - elapsed;
         var done = remaining <= TimeSpan.Zero;
+        var overtime = done ? -remaining : TimeSpan.Zero;
         if (done)
         {
             remaining = TimeSpan.Zero;
@@ -383,9 +384,16 @@ internal sealed class TrayApplicationContext : ApplicationContext
         // Round up to the minute so the icon reads 0:00 exactly when the 9 hours are reached.
         var iconRemaining = TimeSpan.FromMinutes(Math.Ceiling(remaining.TotalMinutes));
         var iconText = $"{(int)iconRemaining.TotalHours}:{iconRemaining.Minutes:00}";
+        if (done)
+        {
+            iconText = $"{(int)overtime.TotalHours}:{overtime.Minutes:00}";
+        }
+
         var color = done ? Color.Firebrick : remaining < TimeSpan.FromHours(1) ? Color.DarkOrange : Color.SeaGreen;
 
-        var details = $"Remaining {FormatDuration(remaining)}\nWorked {FormatDuration(elapsed)} (in at {clockIn:HH:mm})\nClock out at {clockIn + WorkDay:HH:mm}";
+        var details = done
+            ? $"Overtime {FormatDuration(overtime)}\nWorked {FormatDuration(elapsed)} (in at {clockIn:HH:mm})"
+            : $"Remaining {FormatDuration(remaining)}\nWorked {FormatDuration(elapsed)} (in at {clockIn:HH:mm})\nClock out at {clockIn + WorkDay:HH:mm}";
         SetDisplay(iconText, color, details.Replace("\n", " | "), details);
     }
 

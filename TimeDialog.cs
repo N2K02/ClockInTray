@@ -34,7 +34,7 @@ internal sealed class TimeDialog : Form
 
         _picker.Value = defaultTime;
 
-        var ok = new Button { Text = okText, DialogResult = DialogResult.OK, Location = new Point(130, 86), Size = new Size(110, 32) };
+        var ok = new Button { Text = okText, DialogResult = DialogResult.OK, Location = new Point(cancelText is null ? ClientSize.Width - 130 : 130, 86), Size = new Size(110, 32) };
         ok.Click += OnOk;
 
         Controls.AddRange([label, _picker, ok]);
