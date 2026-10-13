@@ -28,9 +28,9 @@ internal sealed class TimeDialog : Form
         MinimizeBox = false;
         TopMost = true;
         ShowInTaskbar = true;
-        ClientSize = new Size(340, 135);
+        ClientSize = new Size(cancelText is null ? 290 : 340, 135);
 
-        var label = new Label { Text = message, AutoSize = false, Location = new Point(20, 15), Size = new Size(300, 65) };
+        var label = new Label { Text = message, AutoSize = false, Location = new Point(20, 15), Size = new Size(ClientSize.Width - 40, 65) };
 
         _picker.Value = defaultTime;
 
