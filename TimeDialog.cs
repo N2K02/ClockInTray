@@ -28,19 +28,50 @@ internal sealed class TimeDialog : Form
         MinimizeBox = false;
         TopMost = true;
         ShowInTaskbar = true;
-        ClientSize = new Size(340, 150);
+        ClientSize = new Size(340, 160);
 
         var label = new Label { Text = message, AutoSize = false, Location = new Point(20, 15), Size = new Size(300, 50) };
 
         _picker.Value = defaultTime;
 
-        var ok = new Button { Text = okText, DialogResult = DialogResult.OK, Location = new Point(110, 110), Width = 110 };
-        var cancel = new Button { Text = cancelText, DialogResult = DialogResult.Cancel, Location = new Point(230, 110), Width = 90 };
+        var ok = new Button { Text = okText, DialogResult = DialogResult.OK, Location = new Point(110, 115), Size = new Size(110, 32) };
+        var cancel = new Button { Text = cancelText, DialogResult = DialogResult.Cancel, Location = new Point(230, 115), Size = new Size(90, 32) };
         ok.Click += OnOk;
 
         Controls.AddRange([label, _picker, ok, cancel]);
         AcceptButton = ok;
         CancelButton = cancel;
+    }
+
+    // Keeps the picker on the current time (until the user edits it) and shows the time worked past the work day.
+    public void EnableLive(DateTime clockIn, TimeSpan workDay, string message)
+    {
+        var label = Controls.OfType<Label>().First();
+        var edited = false;
+        var setting = false;
+        _picker.ValueChanged += (_, _) => edited |= !setting;
+
+        var timer = new System.Windows.Forms.Timer { Interval = 1000 };
+        void Refresh()
+        {
+            var now = DateTime.Now;
+            if (!edited)
+            {
+                setting = true;
+                _picker.Value = now;
+                setting = false;
+            }
+
+            var over = now - clockIn - workDay;
+            label.Text = over > TimeSpan.Zero
+                ? $"{message}\nOvertime: +{(int)over.TotalHours}:{over.Minutes:00}"
+                : message;
+        }
+
+        timer.Tick += (_, _) => Refresh();
+        Disposed += (_, _) => timer.Dispose();
+        Refresh();
+        timer.Start();
     }
 
     private void OnOk(object? sender, EventArgs e)

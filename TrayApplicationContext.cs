@@ -178,6 +178,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _dialogOpen = true;
         using var dialog = new TimeDialog("Time to clock out", message, defaultTime, clockIn, "Clock out", "Later");
         _clockOutDialog = dialog;
+        dialog.EnableLive(clockIn, WorkDay, message);
         var result = dialog.ShowDialog();
         _clockOutDialog = null;
         _dialogOpen = false;
@@ -484,4 +485,3 @@ internal sealed class TrayApplicationContext : ApplicationContext
         base.ExitThreadCore();
     }
 }
-
