@@ -8,7 +8,7 @@ internal sealed class TimeDialog : Form
         CustomFormat = "HH:mm",
         ShowUpDown = true,
         Width = 90,
-        Location = new Point(20, 85),
+        Location = new Point(20, 90),
     };
 
     private readonly DateTime _earliest;
@@ -28,20 +28,20 @@ internal sealed class TimeDialog : Form
         MinimizeBox = false;
         TopMost = true;
         ShowInTaskbar = true;
-        ClientSize = new Size(340, 180);
+        ClientSize = new Size(340, 135);
 
         var label = new Label { Text = message, AutoSize = false, Location = new Point(20, 15), Size = new Size(300, 65) };
 
         _picker.Value = defaultTime;
 
-        var ok = new Button { Text = okText, DialogResult = DialogResult.OK, Location = new Point(cancelText is null ? 215 : 110, 130), Size = new Size(110, 32) };
+        var ok = new Button { Text = okText, DialogResult = DialogResult.OK, Location = new Point(130, 86), Size = new Size(110, 32) };
         ok.Click += OnOk;
 
         Controls.AddRange([label, _picker, ok]);
         AcceptButton = ok;
         if (cancelText is not null)
         {
-            var cancel = new Button { Text = cancelText, DialogResult = DialogResult.Cancel, Location = new Point(230, 130), Size = new Size(90, 32) };
+            var cancel = new Button { Text = cancelText, DialogResult = DialogResult.Cancel, Location = new Point(250, 86), Size = new Size(70, 32) };
             Controls.Add(cancel);
             CancelButton = cancel;
         }
