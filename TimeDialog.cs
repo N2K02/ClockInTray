@@ -11,6 +11,9 @@ internal sealed class TimeDialog : Form
         Location = new Point(20, 90),
     };
 
+    // Windows Forms shows its default icon unless told otherwise; reuse the exe's icon, loaded once for the app's lifetime.
+    private static readonly Icon? AppIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+
     private readonly DateTime _earliest;
     private readonly string _title;
 
@@ -22,6 +25,7 @@ internal sealed class TimeDialog : Form
         _earliest = earliest;
 
         Text = title;
+        Icon = AppIcon;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         StartPosition = FormStartPosition.CenterScreen;
         MaximizeBox = false;
